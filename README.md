@@ -8,4 +8,5 @@ Two download patterns are supported: Searching by n taxonkeys, or searching by n
 The two variables below definded in the module ca nbe overwritten to use different facets.
 
 geom = {'type': 'within', 'geometry': None}
+
 species = {'type': 'or', 'predicates': None}
