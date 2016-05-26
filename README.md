@@ -41,3 +41,6 @@ gd.run_download("/home/jan/Documents/lists/basis-of-record.csv", gd.payload, 'us
                 credentials=('username', 'passw0rd'), 
                 polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
 ```
+##Caveats
+The download service can probably not handle more than a few hundred taxon keys at the time, so limiting a request to < 100 keys to begin with would be prudent.</br>
+The same could be said for polygons - if a very complex shape (> 100 points) gets the download killed repeatedly, try simplyfying the shape.
