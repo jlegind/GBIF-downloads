@@ -23,6 +23,8 @@ run_download("/home/user/Documents/species.csv", payload, 'username', 'user@mail
               polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
 #payload is already defined in the script but can be modified
 ```
+You can omit the polygon and just query by taxon keys.
+
 Optionally you can override or modify the variables to get at other facets that the GBIF API surfaces. In this case a range of Basis-of-record:
 
 ```
