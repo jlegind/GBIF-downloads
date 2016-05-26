@@ -5,7 +5,9 @@ The script produces a JSON string consisting of predicates[1] which are fed into
 [1] http://www.gbif.org/developer/occurrence#predicates
 
 
-The script **does *not* return an object** since the request is handled entirely within the GBIF domain. Users should check the status of their downloads: http://www.gbif.org/user/download </br>
+The script **does *not* return an object** since the request is handled entirely within the GBIF domain. Users should check the status of their downloads: http://www.gbif.org/user/download
+
+
 Two download patterns are directly supported: Searching by n taxonkeys, or searching by n taxonkeys and a polygon.
 
 The variables below defined in the module can be modified to use different facets.
