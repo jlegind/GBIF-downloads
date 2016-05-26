@@ -31,5 +31,7 @@ import gbif_download as gd
 
 gd.predicate_construct['key'] = 'BASIS_OF_RECORD'
 
-gd.run_download("/home/jan/Documents/lists/basis-of-record.csv", gd.payload, 'jlegind', 'jlegind@gbif.org', credentials=('jlegind', 'mussimus'), polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
+gd.run_download("/home/jan/Documents/lists/basis-of-record.csv", gd.payload, 'username', 'user@mail.org', 
+                credentials=('jlegind', 'mussimus'), 
+                polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
 ```
