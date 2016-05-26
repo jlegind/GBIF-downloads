@@ -1,12 +1,12 @@
 # GBIF-downloads with Python 
-Create user downloads using the GBIF API http://www.gbif.org/developer/summary 
+Create user downloads using the GBIF API http://www.gbif.org/developer/summary . Recognizing that the normal GBIF portal search and download services are not well suited for downloads based on a large number of species, this module addresses the situation and allows users to add a map polygon to the search as well.   
 
-The script produces a JSON string consisting of predicates, the like of which can be found here:
+The script produces a JSON string consisting of predicates the like of which can be found here:
 http://www.gbif.org/developer/occurrence#predicates
 
-Two download patterns are supported: Searching by n taxonkeys, or searching by n taxonkeys and a polygon.
+Two download patterns are directly supported: Searching by n taxonkeys, or searching by n taxonkeys and a polygon.
 
-The variables below definded in the module can be modified to use different facets.
+The variables below defined in the module can be modified to use different facets.
 
 ```
 geom = {'type': 'within', 'geometry': None}
