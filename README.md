@@ -2,7 +2,9 @@
 Create user downloads using the GBIF API http://www.gbif.org/developer/summary . Recognizing that the normal GBIF portal search and download services are not well suited for downloads based on a large number of species names, this module addresses the situation by allowing users to submit a file containing species keys. Additionally it allows users to add a map polygon to the search as well.   
 
 The script produces a JSON string consisting of predicates[1] which are fed into a service request.</br>
-[1] http://www.gbif.org/developer/occurrence#predicates </br>
+[1] http://www.gbif.org/developer/occurrence#predicates
+
+
 The script **does *not* return an object** since the request is handled entirely within the GBIF domain. Users should check the status of their downloads: http://www.gbif.org/user/download </br>
 Two download patterns are directly supported: Searching by n taxonkeys, or searching by n taxonkeys and a polygon.
 
