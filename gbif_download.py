@@ -4,6 +4,7 @@ Author: Jan K. Legind, Global Biodiversity Information Facility (GBIF), 2016-05-
 Enables users to launch user_downloads against the GBIF API http://www.gbif.org/developer/occurrence#download
 Requires a user account on GBIF.org since credentials are needed.
 Two patterns are supported: Searching by n taxonkeys, or searching by n taxonkeys and a polygon
+The main function run_download() does not return any value since the download is handled entirely in the GBIF domain.
 """
 
 import requests
