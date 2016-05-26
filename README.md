@@ -11,4 +11,8 @@ The two variables below definded in the module can be overwritten to use differe
 ```
 geom = {'type': 'within', 'geometry': None}
 species = {'type': 'or', 'predicates': None}
+predicate_construct = {'type': 'equals', 'key': 'TAXON_KEY', 'value': None}
 ```
+
+## Usage pattern
+The most typical usecase involves a number of species keys (sorry, but you have to get these first - use the excellent rgbif package from rOpenSci https://github.com/ropensci/rgbif) and perhaps a map polygon.
