@@ -19,5 +19,6 @@ The most typical usecase involves a number of species keys (sorry, but you have 
 
 ```
 gd.run_download("/home/user/Documents/species.csv", payload, 'username', 'user@mail.org', 
-credentials=('username', 'passw0rd'), polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
+                credentials=('username', 'passw0rd'), 
+                polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
 ```
