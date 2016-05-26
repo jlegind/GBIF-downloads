@@ -6,7 +6,7 @@ http://www.gbif.org/developer/occurrence#predicates
 
 Two download patterns are supported: Searching by n taxonkeys, or searching by n taxonkeys and a polygon.
 
-The two variables below definded in the module can be overwritten to use different facets.
+The variables below definded in the module can be overwritten to use different facets.
 
 ```
 geom = {'type': 'within', 'geometry': None}
@@ -21,4 +21,5 @@ The most typical usecase involves a number of species keys (sorry, but you have 
 run_download("/home/user/Documents/species.csv", payload, 'username', 'user@mail.org', 
               credentials=('username', 'passw0rd'), 
               polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
+#payload is already defined in the script but can be overrided
 ```
