@@ -1,5 +1,6 @@
 # GBIF-downloads
 Create user downloads using the GBIF API http://www.gbif.org/developer/summary 
+
 The script produces a JSON string consisting of predicates, the like of which can be found here:
 http://www.gbif.org/developer/occurrence#predicates
 
