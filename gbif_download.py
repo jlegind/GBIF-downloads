@@ -20,6 +20,7 @@ payload = {'creator': None, 'notification_address': [None], 'send_notification':
            }
 geom = {'type': 'within', 'geometry': None}
 species = {'type': 'or', 'predicates': None}
+predicate_construct = {'type': 'equals', 'key': 'TAXON_KEY', 'value': None}
 #These JSON variables can be overwritten to support other user download queries
 
 
@@ -38,11 +39,10 @@ def run_download(readfile, payload, creator, email, credentials, polygon=None, p
         for j in reading:
             values.append(j[0])
     if predicate is None:
-        preds_construct = {'type': 'equals',
-                           'key': 'TAXON_KEY',
-                           'value': None}
+        preds_construct = predicate_construct
     else:
         preds_construct = predicate
+    print preds_construct
     p = make_predicate(preds_construct, values)
     print p
     pay = make_payload(payload, creator, email, p, polygon)
