@@ -16,7 +16,7 @@ from gbif_download_chunks import GBIFChunkDownload
 
 # fill in name, email and cookie info for login
 example_chunk = GBIFChunkDownload('name', 'email',
-                                  cookies_dict=dict("key"="value"))
+                                  cookies_dict={"key": "value"})
 
 # require occurrences in Belgium
 example_chunk.add_predicate('COUNTRY', 'BE')
