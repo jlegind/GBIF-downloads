@@ -27,8 +27,8 @@ example.run_download(('your_gbif_user_name', 'your_password'))
 
 When adding a predicate for `COUNTRY` and a list of `TAXONKEY`s [3084923, 2498252, 3189866] as predicates, the resulting json will look like:
 
-```json
-{'created': 2016,
+```
+{'created: 2016,
  'creator': 'your_name',
  'notification_address': ['your_email'],
  'predicate': {'predicates': [{'key': 'COUNTRY',
