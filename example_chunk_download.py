@@ -21,7 +21,7 @@ example_chunk = GBIFChunkDownload('name', 'email',
 # require occurrences in Belgium
 example_chunk.add_predicate('COUNTRY', 'BE')
 
-#define the chunk size
+# define the chunk size
 example_chunk.chunk_size = 5
 taxonkeys = ['3189866',  '2498252', '3084923', '2340977', '3170247', '3151811',
              '3129663', '2441176', '2882443', '2437394', '5178057', '2439838',
