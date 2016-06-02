@@ -1,4 +1,4 @@
-# GBIF-downloads with Python 
+# GBIF-downloads with Python
 Create user downloads using the GBIF API http://www.gbif.org/developer/summary . Recognizing that the normal GBIF portal search and download services are not well suited for downloads based on a large number of species names, this module addresses the situation by allowing users to submit a file containing species keys. Additionally it allows users to add a map polygon to the search as well.   
 
 The script produces a JSON string consisting of predicates[1] which are fed into a service request.</br>
@@ -8,39 +8,62 @@ The script produces a JSON string consisting of predicates[1] which are fed into
 The script **does *not* return an object** since the request is handled entirely within the GBIF domain. Users should check the status of their downloads: http://www.gbif.org/user/download
 
 
-Two download patterns are directly supported: Searching by n taxonkeys, or searching by n taxonkeys and a polygon.
+## Usage GBIF downloader
 
-The variables below defined in the module can be modified to use different facets.
-
+In python, an object is created to start the json-building
 ```python
-geom = {'type': 'within', 'geometry': None}
-species = {'type': 'or', 'predicates': None}
-predicate_construct = {'type': 'equals', 'key': 'TAXON_KEY', 'value': None}
+example.GBIFDownload('your_name', 'your_email')
 ```
 
-## Usage pattern
+Three download patterns are directly supported:
+* Searching by n values for a specified variable, using the `add_iterative_predicate` function.
+* Searching relative (typically `within`) a Polygon, using the `add_geometry` function.
+* Adding a regular predicate (a value of a variable with a predicate type), using the `add_predicate` function
+
+The request can be executed by using the function `run_download`, which makes a request based on the given predicates:
+```python
+example.run_download(('your_gbif_user_name', 'your_password'))
+```
+
+When adding a predicate for `COUNTRY` and a list of `TAXONKEY`s [3084923, 2498252, 3189866] as predicates, the resulting json will look like:
+
+```
+{'created: 2016,
+ 'creator': 'your_name',
+ 'notification_address': ['your_email'],
+ 'predicate': {'predicates': [{'key': 'COUNTRY',
+                               'type': 'equals',
+                               'value': 'BE'},
+                              {'predicates': [{'key': 'TAXON_KEY',
+                                               'type': 'equals',
+                                               'value': 3084923},
+                                              {'key': 'TAXON_KEY',
+                                               'type': 'equals',
+                                               'value': 2498252},
+                                              {'key': 'TAXON_KEY',
+                                               'type': 'equals',
+                                               'value': 3189866}],
+                               'type': 'or'}],
+               'type': 'and'},
+ 'send_notification': 'true'}
+```
+
+See `example_download.py` for the example code.
+
 The most typical usecase involves a number of species keys (sorry, but you have to get these first - use the excellent rgbif package from rOpenSci https://github.com/ropensci/rgbif or Scott Chamberlain's pygbif https://github.com/sckott/pygbif) and perhaps a map polygon.
 
-```python
-run_download("/home/user/Documents/species.csv", payload, 'username', 'user@mail.org', 
-              credentials=('username', 'passw0rd'), 
-              polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
-#payload is already defined in the script but can be modified
-```
-You can omit the polygon and just query by taxon keys.
 
-Optionally you can override or modify the variables to get at other facets that the GBIF API surfaces. In this case a range of Basis-of-record:
+The download service can probably not handle more than a few hundred taxon-keys at the time, so limiting a request to < 100 keys to begin with would be prudent.
 
-```python
-import gbif_download as gd
+The same could be said for polygons - if a very complex shape (> 100 points) gets the download killed repeatedly, try simplifying the shape.
 
+## Usage GBIF Chunk downloader
 
-gd.predicate_construct['key'] = 'BASIS_OF_RECORD'
+To partly solve the issue of the limit on download restrictions, an extended version of the GBIF_downloader is available, which can process a list of values by making chunks and making individual requests.
 
-gd.run_download("/home/jan/Documents/lists/basis-of-record.csv", gd.payload, 'username', 'user@mail.org', 
-                credentials=('username', 'passw0rd'), 
-                polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
-```
-##Caveats
-The download service can probably not handle more than a few hundred taxon keys at the time, so limiting a request to < 100 keys to begin with would be prudent.</br>
-The same could be said for polygons - if a very complex shape (> 100 points) gets the download killed repeatedly, try simplyfying the shape.
+The functionality provides two elements:
+ * split the original set of values (list) in chunks of a user-defined size
+ * send the requests for each chunk, taking into account the limit in
+   number of downloads by checking for each request if it is handled. The latter is done by checking if a new doi is available on the user/download page.
+
+See `example_chunk_download.py` for the example code.

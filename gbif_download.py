@@ -11,78 +11,107 @@ import requests
 import json
 import csv
 import datetime
-
-url = 'http://api.gbif.org/v1/occurrence/download/request'
-header = {'Content-Type': 'application/json'}
-values = []
-payload = {'creator': None, 'notification_address': [None], 'send_notification': 'true', 'created': None,
-           'predicate': {
-           'type': 'and',
-           'predicates': []
-            }
-           }
-geom = {'type': 'within', 'geometry': None}
-species = {'type': 'or', 'predicates': None}
-predicate_construct = {'type': 'equals', 'key': 'TAXON_KEY', 'value': None}
-#These JSON variables can be overwritten to support other user download queries
+import pprint
 
 
-def run_download(readfile, payload, creator, email, credentials, polygon=None, predicate=None):
-    """Serves as exe function. Extracts the keys from the readfile to a list and prepares the species JSON.
-    :param readfile: File containing the taxon keys to be searched.
-    :param payload: Initial JSON template.
-    :param creator: User name.
-    :param email: -
-    :param credentials: Username and passw0rd tuple.
-    :param polygon: In this format 'POLYGON((x1 y1, x2 y2, x3 y3,... xn yn))'
-    :param predicate: Default None. Can be used to override the preds_construct.
-    """
-    with open(readfile) as ff:
-        reading = csv.reader(ff)
-        for j in reading:
-            values.append(j[0])
-    if predicate is None:
-        preds_construct = predicate_construct
-    else:
-        preds_construct = predicate
-    print preds_construct
-    p = make_predicate(preds_construct, values)
-    print p
-    pay = make_payload(payload, creator, email, p, polygon)
-    print pay
-    requests.post(url, auth=credentials, data=json.dumps(pay), headers=header)
+class GBIFDownload(object):
 
+    def __init__(self, creator, email, polygon=None):
+        """class to setup a JSON doc with the query and POST a request
 
-def make_predicate(predicate, values, key='value'):
-    """Creates all the individual predicates in JSON format.
-    :param predicate: a dict
-    :param values: List of all the values
-    :param key: The key for the values
-    :return: List of dicts
-    """
-    preds = []
-    while values:
-        predicate[key] = values.pop()
-        preds.append(predicate.copy())
-    return preds
+        All predicates (default key-value or iterative based on a list of
+        values) are combined with an AND statement. Iterative predicates are
+        creating a subset equal statements combined with OR
 
+        :param creator: User name.
+        :param email: user email
+        :param polygon: Polygon of points to extract data from
+        """
+        self.predicates = []
 
-def make_payload(payload, creator, email, predicate, polygon=None):
-    """Creates the finished JSON payload going into the API call.
-    :param payload: JSON template
-    :return: Prepared JSON for the API call
-    """
-    payload["creator"] = creator
-    payload["created"] = datetime.date.today().year
-    payload["notification_address"][0] = email
-    if polygon is None:
-        print 'poly is NONE!'
-        payload["predicate"]["type"] = 'or'
-        for j in predicate:
-            payload["predicate"]["predicates"].append(j)
-    else:
-        geom["geometry"] = polygon
-        payload["predicate"]["predicates"].append(geom)
-        species["predicates"] = predicate
-        payload["predicate"]["predicates"].append(species)
-    return payload
+        self.url = 'http://api.gbif.org/v1/occurrence/download/request'
+        self.header = {'Content-Type': 'application/json'}
+        self.payload = {'creator': creator,
+                        'notification_address': [email],
+                        'send_notification': 'true',
+                        'created': datetime.date.today().year,
+                        'predicate': {
+                            'type': 'and',
+                            'predicates': self.predicates
+                            }
+                        }
+
+        # prepare the geometry polygon constructions
+        if polygon:
+            self.add_geometry(polygon)
+
+    def add_predicate(self, key, value, predicate_type='equals'):
+        """
+        add key, value, type combination of a predicate
+
+        :param key: query KEY parameter
+        :param value: the value used in the predicate
+        :param predicate_type: the type of predicate (e.g. equals)
+        """
+        self.predicates.append({'type': predicate_type,
+                                'key': key,
+                                'value': value
+                                })
+
+    @staticmethod
+    def _extract_values(values_list):
+        """extract values from either file or list
+
+        :param values_list: list or file name (str) with list of values
+        """
+        values = []
+        # check if file or list of values to iterate
+        if isinstance(values_list, str):
+            with open(values_list) as ff:
+                reading = csv.reader(ff)
+                for j in reading:
+                    values.append(j[0])
+        elif isinstance(values_list, list):
+            values = values_list
+        else:
+            raise Exception("input datatype not supported.")
+        return values
+
+    def add_iterative_predicate(self, key, values_list):
+        """add an iterative predicate with a key and set of values
+        which it can be equal to in and or function
+
+        :param key: API key to use for the query.
+        :param values_list: Filename or list containing the taxon keys to be searched.
+
+        """
+        values = self._extract_values(values_list)
+
+        predicate = {'type': 'equals', 'key': key, 'value': None}
+        predicates = []
+        while values:
+            predicate['value'] = values.pop()
+            predicates.append(predicate.copy())
+        self.predicates.append({'type': 'or', 'predicates': predicates})
+
+    def add_geometry(self, polygon, geom_type='within'):
+        """add a geometry type of predicate
+
+        :param polygon: In this format 'POLYGON((x1 y1, x2 y2, x3 y3,... xn yn))'
+        :param geom_type: type of predicate, e.g. within
+        :return:
+        """
+        self.predicates.append({'type': geom_type, 'geometry': polygon})
+
+    def run_download(self, credentials):
+        """
+        :param credentials: Username and password tuple.
+        :return:
+        """
+
+        pprint.pprint(self.payload)
+        requests.post(self.url, auth=credentials,
+                      data=json.dumps(self.payload),
+                      headers=self.header)
+        print("request sent, check http://www.gbif.org/user/download for progress...")
+
