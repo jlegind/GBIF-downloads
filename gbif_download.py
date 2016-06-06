@@ -17,9 +17,9 @@ header = {'Content-Type': 'application/json'}
 values = []
 payload = {'creator': None, 'notification_address': [None], 'send_notification': 'true', 'created': None,
            'predicate': {
-           'type': 'and',
-           'predicates': []
-            }
+               'type': 'and',
+               'predicates': []
+                }
            }
 geom = {'type': 'within', 'geometry': None}
 species = {'type': 'or', 'predicates': None}
@@ -27,9 +27,9 @@ predicate_construct = {'type': 'equals', 'key': 'TAXON_KEY', 'value': None}
 #These JSON variables can be overwritten to support other user download queries
 
 
-def run_download(readfile, payload, creator, email, credentials, polygon=None, predicate=None):
+def run_download(readobject, payload, creator, email, credentials, polygon=None, predicate=None):
     """Serves as exe function. Extracts the keys from the readfile to a list and prepares the species JSON.
-    :param readfile: File containing the taxon keys to be searched.
+    :param readobject: List or file containing the taxon keys (or other values) to be searched for.
     :param payload: Initial JSON template.
     :param creator: User name.
     :param email: -
@@ -37,10 +37,19 @@ def run_download(readfile, payload, creator, email, credentials, polygon=None, p
     :param polygon: In this format 'POLYGON((x1 y1, x2 y2, x3 y3,... xn yn))'
     :param predicate: Default None. Can be used to override the preds_construct.
     """
-    with open(readfile) as ff:
-        reading = csv.reader(ff)
-        for j in reading:
-            values.append(j[0])
+    if isinstance(readobject, list):
+        for j in readobject:
+            values.append(j)
+    else:
+        try:
+            with open(readobject) as ff:
+                spam_reader = csv.reader(ff)
+                for j in spam_reader:
+                    values.append(j[0])
+        except Exception as e:
+            print e
+            print "Expected object of type list or a file path"
+
     if predicate is None:
         preds_construct = predicate_construct
     else:
@@ -50,7 +59,7 @@ def run_download(readfile, payload, creator, email, credentials, polygon=None, p
     print p
     pay = make_payload(payload, creator, email, p, polygon)
     print pay
-    requests.post(url, auth=credentials, data=json.dumps(pay), headers=header)
+    return requests.post(url, auth=credentials, data=json.dumps(pay), headers=header)
 
 
 def make_predicate(predicate, values, key='value'):
