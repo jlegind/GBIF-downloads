@@ -3,7 +3,7 @@ DEPRECATED!
 This project has been moved to Scott Chamberlain's **pygbif** - Please go to https://github.com/sckott/pygbif  
 ----
 
-
+<br>
 ### GBIF-downloads with Python 
 Create user downloads using the GBIF API http://www.gbif.org/developer/summary . Recognizing that the normal GBIF portal search and download services are not well suited for downloads based on a large number of species names, this module addresses the situation by allowing users to submit a file containing species keys. Additionally it allows users to add a map polygon to the search as well.   
 
