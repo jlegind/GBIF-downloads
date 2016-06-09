@@ -1,4 +1,8 @@
-# GBIF-downloads with Python 
+DEPRECATED!
+==========
+This project has been moved to Scott Chamberlain's **pygbif** - Please go to https://github.com/sckott/pygbif  
+
+## GBIF-downloads with Python 
 Create user downloads using the GBIF API http://www.gbif.org/developer/summary . Recognizing that the normal GBIF portal search and download services are not well suited for downloads based on a large number of species names, this module addresses the situation by allowing users to submit a file containing species keys. Additionally it allows users to add a map polygon to the search as well.   
 
 The script produces a JSON string consisting of predicates[1] which are fed into a service request.</br>
@@ -18,7 +22,7 @@ species = {'type': 'or', 'predicates': None}
 predicate_construct = {'type': 'equals', 'key': 'TAXON_KEY', 'value': None}
 ```
 
-## Usage pattern
+### Usage pattern
 The most typical usecase involves a number of species keys (sorry, but you have to get these first - use the excellent rgbif package from rOpenSci https://github.com/ropensci/rgbif or Scott Chamberlain's pygbif https://github.com/sckott/pygbif) and perhaps a map polygon.
 
 ```python
@@ -41,6 +45,6 @@ gd.run_download("/home/jan/Documents/lists/basis-of-record.csv", gd.payload, 'us
                 credentials=('username', 'passw0rd'), 
                 polygon='POLYGON((-14.0625 42.553080, 9.84375 38.272688, -7.03125 26.431228, -14.0625 42.553080))')
 ```
-##Caveats
+###Caveats
 The download service can probably not handle more than a few hundred taxon keys at the time, so limiting a request to < 100 keys to begin with would be prudent.</br>
 The same could be said for polygons - if a very complex shape (> 100 points) gets the download killed repeatedly, try simplyfying the shape.
